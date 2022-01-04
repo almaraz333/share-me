@@ -3,7 +3,6 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import App from './App';
-import './index.css';
 
 ReactDom.render(
   <RecoilRoot>

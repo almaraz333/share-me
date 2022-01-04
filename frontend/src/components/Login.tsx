@@ -16,8 +16,6 @@ export const Login = () => {
   const setUserState = useSetRecoilState(userState);
 
   const responseGoogle = (response: any) => {
-    setUserState(response.profileObj);
-
     const { name, googleId, imageUrl } = response.profileObj;
 
     const doc = {
@@ -28,6 +26,7 @@ export const Login = () => {
     };
 
     client.createIfNotExists(doc).then(() => {
+      setUserState({ name, imageUrl, googleId });
       navigate('/', { replace: true });
     });
   };
