@@ -4,13 +4,11 @@ import { AiFillCloseCircle } from 'react-icons/ai';
 import { Link, Route, Routes } from 'react-router-dom';
 
 import { Sidebar, UserProfile } from '../components';
-import { client } from '../client';
 //@ts-ignore
 import logo from '../assets/logo.png';
 import { Pins } from './Pins';
 import { useRecoilValue } from 'recoil';
 import { userState } from '../atoms';
-import { userQuery } from '../utils/data';
 
 export const Home = () => {
   const [toggleSidebar, setToggleSidebar] = useState(false);
@@ -39,7 +37,11 @@ export const Home = () => {
             <img src={logo} alt="logo" className="w-28" />
           </Link>
           <Link to={`user-profile/${userInfo?.googleId}`}>
-            <img src={userInfo?.imageUrl} alt="user" />
+            <img
+              src={userInfo?.imageUrl}
+              alt="user"
+              className="rounded-lg h-10"
+            />
           </Link>
         </div>
         {toggleSidebar && (
@@ -62,7 +64,7 @@ export const Home = () => {
       <div className="pb-2 flex-1 h-screen overflow-y-scroll" ref={scrollRef}>
         <Routes>
           <Route path="/user-profile/:userId" element={<UserProfile />} />
-          <Route path="/" element={userInfo && <Pins />} />
+          <Route path="/*" element={<Pins />} />
         </Routes>
       </div>
     </div>

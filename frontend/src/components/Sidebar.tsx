@@ -3,9 +3,10 @@ import { RiHomeFill } from 'react-icons/ri';
 import { IoIosArrowForward } from 'react-icons/io';
 //@ts-ignore
 import logo from '../assets/logo.png';
+import { user } from '../types';
 
 type SidebarProps = {
-  user: any;
+  user?: user;
   closeToggle?: (isToggleOpen: boolean) => void;
 };
 
@@ -21,7 +22,7 @@ export const Sidebar = ({ user, closeToggle }: SidebarProps) => {
   };
 
   return (
-    <div className="flex flex-column justify-between bg-white h-full overflow-y-scroll min-w-210 hide-scrollbar">
+    <div className="flex flex-col justify-between bg-white h-full overflow-y-scroll min-w-210 hide-scrollbar">
       <div className="flex flex-col">
         <Link
           to="/"
@@ -33,6 +34,7 @@ export const Sidebar = ({ user, closeToggle }: SidebarProps) => {
         <div className="flex flex-col gap-5">
           <NavLink
             to="/"
+            onClick={handleSidebarToggle}
             className={({ isActive }) =>
               isActive ? isActiveStyle : isNotActiveStyle
             }
@@ -43,8 +45,40 @@ export const Sidebar = ({ user, closeToggle }: SidebarProps) => {
           <h3 className="mt-2 px-5 text-base 2xl:text-xl">
             Discover Categories
           </h3>
+          {[
+            { name: 'Animals' },
+            { name: 'Wallpapers' },
+            { name: 'Photography' },
+            { name: 'Gaming' },
+            { name: 'Coding' }
+          ].map((cat) => (
+            <NavLink
+              key={cat.name}
+              to={`/category/${cat.name}`}
+              onClick={handleSidebarToggle}
+              className={({ isActive }) =>
+                isActive ? isActiveStyle : isNotActiveStyle
+              }
+            >
+              {cat.name}
+            </NavLink>
+          ))}
         </div>
       </div>
+      {user && (
+        <Link
+          to={`user-profile/${user.googleId}`}
+          className="flex my-5 mb-3 gap-2 p-2 items-center bg-white rounded-lg shadow-lg mx-3"
+          onClick={handleSidebarToggle}
+        >
+          <img
+            src={user.imageUrl}
+            className="w-10 h-10 rounded-full"
+            alt="user-profile"
+          />
+          <p>{user.name}</p>
+        </Link>
+      )}
     </div>
   );
 };
