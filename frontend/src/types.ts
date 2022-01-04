@@ -7,6 +7,18 @@ export type pin = {
   destination: string;
   userId: string;
   image: any;
-  postedBy: user;
-  save: { postedBy: user; userId: string };
+  postedBy: {
+    _id: string;
+    image: string;
+    userName: string;
+    userId: string;
+  };
+  save: {
+    postedBy: {
+      _id: string;
+      image: string;
+      userName: string;
+      userId: string;
+    } | null;
+  }[];
 };

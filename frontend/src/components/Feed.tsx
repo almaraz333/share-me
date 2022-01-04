@@ -12,7 +12,6 @@ export const Feed = () => {
   const { categoryId } = useParams();
 
   useEffect(() => {
-    console.log(categoryId);
     setLoading(true);
     if (categoryId) {
       const query = searchQuery(categoryId);
