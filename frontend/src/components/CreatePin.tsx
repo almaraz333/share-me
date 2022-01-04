@@ -1,5 +1,208 @@
-import React from 'react';
+import { useRecoilValue } from 'recoil';
+import { AiOutlineCloudUpload } from 'react-icons/ai';
+import { MdDelete } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
+
+import { userState } from '../atoms';
+import { client } from '../client';
+import { Spinner } from './Spinner';
+import { categories } from '../utils/data';
+import React, { useState } from 'react';
 
 export const CreatePin = () => {
-  return <div>Create a Pin</div>;
+  const navigate = useNavigate();
+  const user = useRecoilValue(userState);
+
+  const [title, setTitle] = useState('');
+  const [about, setAbout] = useState('');
+  const [destination, setDestination] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [allFieldsFilled, setAllFieldsFilled] = useState(false);
+  const [category, setCategory] = useState<string>('');
+  const [imageAsset, setImageAsset] = useState<any>(null);
+  const [wrongImageType, setWrongImageType] = useState(false);
+
+  const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!!e.target.files?.length) {
+      const { type, name } = e.target.files[0];
+
+      if (
+        type === 'image/png' ||
+        type === 'image/svg' ||
+        type === 'image/jpg' ||
+        type === 'image/jpeg' ||
+        type === 'image/gif' ||
+        type === 'image/tiff'
+      ) {
+        try {
+          setWrongImageType(false);
+          setLoading(true);
+
+          const doc = await client.assets.upload('image', e.target.files[0], {
+            contentType: type,
+            filename: name
+          });
+
+          setImageAsset(doc);
+          setLoading(false);
+        } catch (e) {
+          console.log('Image upload error', e);
+        }
+      } else {
+        setWrongImageType(true);
+      }
+    }
+  };
+
+  const savePin = async () => {
+    if (title && about && destination && imageAsset._id && category) {
+      const doc = {
+        _type: 'pin',
+        title,
+        about,
+        destination,
+        image: {
+          _type: 'image',
+          asset: {
+            _type: 'reference',
+            _ref: imageAsset._id
+          }
+        },
+        userId: user?.googleId,
+        postedBy: {
+          _type: 'postedBy',
+          _ref: user?.googleId
+        },
+        category
+      };
+
+      await client.create(doc);
+
+      navigate('/');
+    }
+
+    setAllFieldsFilled(true);
+
+    setTimeout(() => setAllFieldsFilled(false), 3500);
+  };
+
+  return (
+    <div className="flex flex-col justify-center items-center mt-5 lg:h-4/5">
+      <div className="flex lg:flex-row flex-col justify-center items-center bg-white lg:p-5 p-3 lg:w-4/5 w-full">
+        <div className="bg-secondaryColor p-3 flex flex-0.7 w-full">
+          <div className="flex justify-center items-center flex-col border-2 border-dotted border-gray-300 p-3 w-full h-420">
+            {loading && <Spinner message="Loading..." />}
+            {wrongImageType && <p className="">Wrong Image Type!</p>}
+            {!imageAsset ? (
+              <label>
+                <div className="flex flex-col items-center justify-center h-full">
+                  <div className="flex flex-col items-center">
+                    <p className="font-bold text-2xl">
+                      <AiOutlineCloudUpload />
+                    </p>
+                    <p className="text-lg">Click to upload</p>
+                  </div>
+                  <p className="mt-auto text-gray-400">
+                    Use high-quality JPG, PNG, GIF less than 20mb
+                  </p>
+                </div>
+                <input
+                  type="file"
+                  name="Upload Image"
+                  onChange={(e) => uploadImage(e)}
+                  className="w-0 h-0"
+                />
+              </label>
+            ) : (
+              <div className="relative h-full">
+                <img
+                  src={imageAsset?.url}
+                  alt="uploaded"
+                  className="h-full w-full"
+                />
+                <button
+                  type="button"
+                  className="absolute bottom-3 right-3 p-3 rounded-full bg-white text-xl cursor-pointer outline-none hover:shadow-md transition-all duration-500 ease-in-out"
+                  onClick={() => setImageAsset(null)}
+                >
+                  <MdDelete />
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-1 flex-col gap-6 lg:pl-5 mt-5 w-full">
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Image title"
+            className="outline-none text-2xl sm:text-3xl font-bold border-b-2 border-gray-200 p-2"
+          />
+          {user && (
+            <div className="flex gap-2 my-2 item-center bg-white rounded-lg">
+              <img
+                src={user.imageUrl}
+                className="w-10 h-10 rounded-full"
+                alt="user"
+              />
+              <p className="font-bold">{user.name}</p>
+            </div>
+          )}
+          <input
+            type="text"
+            value={about}
+            onChange={(e) => setAbout(e.target.value)}
+            placeholder="About the pin"
+            className="outline-none text-base sm:text-large border-b-2 border-gray-200 p-2"
+          />
+          <input
+            type="text"
+            value={destination}
+            onChange={(e) => setDestination(e.target.value)}
+            placeholder="Add an image link"
+            className="outline-none text-base sm:text-large border-b-2 border-gray-200 p-2"
+          />
+          <div className="flex flex-col">
+            <div>
+              <p className="mb-2 font-semibold text.lg sm:text-xl ">
+                Choose Pin Category
+              </p>
+              <select
+                onChange={(e) => setCategory(e.target.value)}
+                className="outline-none w-4/5 text-base border-b-2 border-gray-200 p-2 rounded-md cursor-pointer"
+              >
+                <option value="other" className="bg-white">
+                  Select Category
+                </option>
+                {categories.map((cat) => (
+                  <option
+                    key={cat.name}
+                    className="text-base border-0 outline-none capitalize bg-white text-black"
+                    value={cat.name}
+                  >
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex justify-end items-center mt-5">
+              {allFieldsFilled && (
+                <p className="text-red-500 mr-3 text-xl transition-all duration-150 ease-in">
+                  Please fill in all fields
+                </p>
+              )}
+              <button
+                type="button"
+                onClick={savePin}
+                className="bg-red-500 text-white font-bold p-2 rounded-full w-28 outline-none"
+              >
+                Save Pin
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
