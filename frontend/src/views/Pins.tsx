@@ -4,7 +4,7 @@ import { Navbar, Feed, PinDetails, CreatePin, Search } from '../components';
 
 export const Pins = () => {
   return (
-    <div className="px-2 md: px-5">
+    <div className="px-2 md:px-5">
       <div className="bg-grey-50">
         <Navbar />
       </div>

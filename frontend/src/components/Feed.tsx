@@ -12,6 +12,7 @@ export const Feed = () => {
   const { categoryId } = useParams();
 
   useEffect(() => {
+    console.log(categoryId);
     setLoading(true);
     if (categoryId) {
       const query = searchQuery(categoryId);
@@ -26,5 +27,5 @@ export const Feed = () => {
 
   if (loading) return <Spinner message="We are curating your feed!" />;
 
-  return <div>Feed</div>;
+  return <div>{pins && <MasonryLayout pins={pins} />}</div>;
 };
