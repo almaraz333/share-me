@@ -4,6 +4,7 @@ import { IoIosArrowForward } from 'react-icons/io';
 //@ts-ignore
 import logo from '../assets/logo.png';
 import { user } from '../types';
+import { categories } from '../utils/data';
 
 type SidebarProps = {
   user?: user;
@@ -45,13 +46,7 @@ export const Sidebar = ({ user, closeToggle }: SidebarProps) => {
           <h3 className="mt-2 px-5 text-base 2xl:text-xl">
             Discover Categories
           </h3>
-          {[
-            { name: 'Animals' },
-            { name: 'Wallpapers' },
-            { name: 'Photography' },
-            { name: 'Gaming' },
-            { name: 'Coding' }
-          ].map((cat) => (
+          {categories.map((cat) => (
             <NavLink
               key={cat.name}
               to={`/category/${cat.name}`}
