@@ -1,4 +1,10 @@
-export type user = { googleId: string; imageUrl: string; name: string };
+export type user = {
+  googleId: string;
+  imageUrl: string;
+  name: string;
+  _id?: string;
+  userName?: string;
+};
 
 export type postedBy = {
   _id: string;

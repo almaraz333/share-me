@@ -1,7 +1,5 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
-import { AiOutlineLogout } from 'react-icons/ai';
-import { useParams, useNavigate } from 'react-router-dom';
-import { GoogleLogout } from 'react-google-login';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 import {
   userCreatedPinsQuery,
@@ -27,8 +25,6 @@ export const UserProfile = () => {
   const [text, setText] = useState<string | null>('Created');
   const [activeBtn, setActiveBtn] = useState('created');
 
-  const navigate = useNavigate();
-
   const { userId } = useParams();
 
   useEffect(() => {
@@ -43,10 +39,6 @@ export const UserProfile = () => {
       client.fetch(savedPinsQuery).then((data) => setSavedPins(data));
     }
   }, [userId]);
-
-  const logout = () => {
-    navigate('/');
-  };
 
   if (!user) {
     return <Spinner message="Loading Profile..." />;
@@ -68,25 +60,6 @@ export const UserProfile = () => {
               alt="user profile"
             />
             <h1 className="font-bold text-3xl text-center mt-3">{user.name}</h1>
-            <div className="absolute top-0 z-1 right-0 p-2">
-              {userId === user.googleId && (
-                <GoogleLogout
-                  clientId={`${process.env.REACT_APP_GOOGLE_API_TOKEN}`}
-                  render={(renderProps) => (
-                    <button
-                      type="button"
-                      className="bg-white p-2 rounded-full cursor-pointer outline-none shadow-md"
-                      onClick={renderProps.onClick}
-                      disabled={renderProps.disabled}
-                    >
-                      <AiOutlineLogout color="red" fontSize={21} /> Sign out
-                    </button>
-                  )}
-                  onLogoutSuccess={logout}
-                  // cookiePolicy="single_host_origin"
-                />
-              )}
-            </div>
           </div>
           <div className="text-center mb-7">
             <button
