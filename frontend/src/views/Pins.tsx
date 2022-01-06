@@ -1,6 +1,13 @@
 import { Routes, Route } from 'react-router-dom';
 
-import { Navbar, Feed, PinDetails, CreatePin, Search } from '../components';
+import {
+  Navbar,
+  Feed,
+  PinDetails,
+  CreatePin,
+  Search,
+  UserProfile
+} from '../components';
 
 export const Pins = () => {
   return (
@@ -15,6 +22,7 @@ export const Pins = () => {
           <Route path="/pin-details/:pinId" element={<PinDetails />} />
           <Route path="/create-pin" element={<CreatePin />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/user-profile/:userId" element={<UserProfile />} />
         </Routes>
       </div>
     </div>
