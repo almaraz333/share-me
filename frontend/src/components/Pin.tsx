@@ -51,7 +51,7 @@ export const Pin: React.FC<PinProps> = ({
   };
 
   return (
-    <div className="w-max m-2 ">
+    <div className="w-max m-2">
       <div
         onMouseEnter={() => setPostIsHovered(true)}
         onMouseLeave={() => setPostIsHovered(false)}
@@ -100,9 +100,9 @@ export const Pin: React.FC<PinProps> = ({
                     className="bg-white flex items-center gap-2 text-black font-bold p-2 pl-4 pr-4 rounded-full opacity-70 hover:opacity-100 hover:shadow-md"
                   >
                     <BsFillArrowUpRightCircleFill />
-                    {destination.length > 20
-                      ? destination.slice(8, 20)
-                      : destination.slice(8)}
+                    {destination.length > 15
+                      ? `${destination.slice(0, 15)}...`
+                      : destination}
                   </a>
                 )}
                 {postedBy?._id === user?.googleId && (
