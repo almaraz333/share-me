@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { client } from '../client';
+import { pin } from '../types';
 import { feedQuery, searchQuery } from '../utils/data';
 import { MasonryLayout } from './MasonryLayout';
 import { Spinner } from './Spinner';
 
 export const Feed = () => {
   const [loading, setLoading] = useState(false);
-  const [pins, setPins] = useState(null);
+  const [pins, setPins] = useState<pin[] | null>(null);
   const { categoryId } = useParams();
 
   useEffect(() => {
@@ -25,6 +26,13 @@ export const Feed = () => {
   }, [categoryId]);
 
   if (loading) return <Spinner message="We are curating your feed!" />;
+
+  if (!pins?.length)
+    return (
+      <h2 className="flex justify-center mt-10 text-3xl font-bold">
+        No Pins Found
+      </h2>
+    );
 
   return <div>{pins && <MasonryLayout pins={pins} />}</div>;
 };

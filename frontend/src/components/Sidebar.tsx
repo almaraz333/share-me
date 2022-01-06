@@ -55,6 +55,11 @@ export const Sidebar = ({ user, closeToggle }: SidebarProps) => {
                 isActive ? isActiveStyle : isNotActiveStyle
               }
             >
+              <img
+                src={cat.image}
+                alt="category"
+                className="w-8 h-8 rounded-full shadow-sm"
+              />
               {cat.name}
             </NavLink>
           ))}
