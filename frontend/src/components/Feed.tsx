@@ -34,5 +34,5 @@ export const Feed = () => {
       </h2>
     );
 
-  return <div>{pins && <MasonryLayout pins={pins} />}</div>;
+  return <div>{pins && <MasonryLayout pins={pins} />} </div>;
 };
